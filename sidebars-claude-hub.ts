@@ -10,6 +10,36 @@ const sidebars: SidebarsConfig = {
         'getting-started/installation',
       ],
     },
+    {
+      type: 'category',
+      label: 'Configuration',
+      items: [
+        'configuration/environment-variables',
+        'configuration/aws-setup',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Features',
+      items: [
+        'features/auto-tagging',
+        'features/pr-reviews',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'API Reference',
+      items: [
+        'api/webhooks',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Troubleshooting',
+      items: [
+        'troubleshooting/common-issues',
+      ],
+    },
   ],
 };
 
