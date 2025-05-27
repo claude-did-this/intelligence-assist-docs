@@ -69,8 +69,15 @@ const config: Config = {
     ],
   ],
 
+  themes: ['@docusaurus/theme-mermaid'],
+  markdown: {
+    mermaid: true,
+  },
   themeConfig: {
     image: 'img/intelligence-assist-social-card.jpg',
+    mermaid: {
+      theme: {light: 'neutral', dark: 'dark'},
+    },
     navbar: {
       title: 'Intelligence Assist',
       logo: {
