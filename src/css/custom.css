@@ -1,0 +1,289 @@
+/**
+ * Intelligence Assist Documentation Theme
+ * Professional styling for technical documentation
+ */
+
+:root {
+  /* Primary brand colors - Professional blue palette */
+  --ifm-color-primary: #1e40af;
+  --ifm-color-primary-dark: #1d4ed8;
+  --ifm-color-primary-darker: #1e3a8a;
+  --ifm-color-primary-darkest: #172554;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93c5fd;
+  
+  /* Enhanced typography */
+  --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --ifm-font-family-monospace: 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+  --ifm-font-size-base: 16px;
+  --ifm-line-height-base: 1.6;
+  
+  /* Code styling */
+  --ifm-code-font-size: 94%;
+  --ifm-code-background: #f8fafc;
+  --ifm-code-border-radius: 6px;
+  --ifm-code-padding-horizontal: 0.4rem;
+  --ifm-code-padding-vertical: 0.2rem;
+  
+  /* Enhanced spacing */
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-spacing-vertical: 1.5rem;
+  
+  /* Professional color scheme */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f8fafc;
+  --ifm-color-content: #334155;
+  --ifm-color-content-secondary: #64748b;
+  
+  /* Border and shadow improvements */
+  --ifm-global-border-width: 1px;
+  --ifm-global-radius: 8px;
+  --ifm-box-shadow-lw: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --ifm-box-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  
+  /* Highlighted code line */
+  --docusaurus-highlighted-code-line-bg: rgba(30, 64, 175, 0.1);
+}
+
+/* Dark mode colors */
+[data-theme='dark'] {
+  --ifm-color-primary: #60a5fa;
+  --ifm-color-primary-dark: #3b82f6;
+  --ifm-color-primary-darker: #2563eb;
+  --ifm-color-primary-darkest: #1d4ed8;
+  --ifm-color-primary-light: #93c5fd;
+  --ifm-color-primary-lighter: #bfdbfe;
+  --ifm-color-primary-lightest: #dbeafe;
+  
+  --ifm-background-color: #0f172a;
+  --ifm-background-surface-color: #1e293b;
+  --ifm-color-content: #e2e8f0;
+  --ifm-color-content-secondary: #94a3b8;
+  --ifm-code-background: #1e293b;
+  
+  --docusaurus-highlighted-code-line-bg: rgba(96, 165, 250, 0.15);
+}
+
+/* Typography improvements */
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.markdown h1 {
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.markdown h2 {
+  font-size: 1.875rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Enhanced code blocks */
+.prism-code {
+  border-radius: var(--ifm-global-radius);
+  box-shadow: var(--ifm-box-shadow-lw);
+}
+
+/* Improved tables */
+.markdown table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--ifm-global-radius);
+  overflow: hidden;
+  box-shadow: var(--ifm-box-shadow-lw);
+}
+
+.markdown table th {
+  background-color: var(--ifm-background-surface-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+}
+
+/* Card-like styling for admonitions */
+.alert {
+  border-radius: var(--ifm-global-radius);
+  box-shadow: var(--ifm-box-shadow-lw);
+  border-left: 4px solid var(--ifm-color-primary);
+}
+
+/* Navigation improvements */
+.navbar {
+  box-shadow: var(--ifm-box-shadow-md);
+  backdrop-filter: blur(8px);
+}
+
+.navbar__title {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+/* Sidebar improvements */
+.menu__link {
+  border-radius: 6px;
+  margin: 2px 0;
+  transition: all 0.15s ease;
+}
+
+.menu__link:hover {
+  background-color: rgba(var(--ifm-color-primary-rgb), 0.1);
+  transform: translateX(2px);
+}
+
+.menu__link--active {
+  background-color: rgba(var(--ifm-color-primary-rgb), 0.15);
+  font-weight: 600;
+}
+
+/* YouTube video responsive container */
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  margin: 2rem 0;
+  border-radius: var(--ifm-global-radius);
+  overflow: hidden;
+  box-shadow: var(--ifm-box-shadow-md);
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Enhanced buttons */
+.button {
+  border-radius: var(--ifm-global-radius);
+  font-weight: 600;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--ifm-box-shadow-md);
+}
+
+/* Footer improvements */
+.footer {
+  background: linear-gradient(135deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary-dark) 100%);
+}
+
+/* Breadcrumb improvements */
+.breadcrumbs__item--active .breadcrumbs__link {
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+/* Search improvements */
+.navbar__search-input {
+  border-radius: 20px;
+  background-color: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .video-container {
+    margin: 1rem 0;
+  }
+  
+  .markdown h1 {
+    font-size: 1.75rem;
+  }
+  
+  .markdown h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Feature cards styling */
+.feature-card {
+  background: var(--ifm-background-surface-color);
+  border-radius: var(--ifm-global-radius);
+  padding: 1.5rem;
+  box-shadow: var(--ifm-box-shadow-lw);
+  transition: all 0.15s ease;
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ifm-box-shadow-md);
+}
+
+/* Badge styling */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 1rem;
+  background-color: var(--ifm-color-primary);
+  color: white;
+}
+
+/* Syntax highlighting improvements */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #6b7280;
+}
+
+.token.punctuation {
+  color: #374151;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #dc2626;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #059669;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #d97706;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #7c3aed;
+}
+
+.token.function,
+.token.class-name {
+  color: #2563eb;
+}
