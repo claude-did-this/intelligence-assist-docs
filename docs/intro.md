@@ -47,7 +47,7 @@ Learn about all our projects and choose what fits your needs:
 
 - **💬 Discussions** - [GitHub Discussions](https://github.com/orgs/intelligence-assist/discussions)
 - **🐛 Issues** - [Report Bugs](https://github.com/intelligence-assist/intelligence-assist-docs/issues)
-- **📧 Contact** - [support@intelligence-assist.com](mailto:support@intelligence-assist.com)
+- **🆘 Support** - [Submit an Issue](https://github.com/intelligence-assist/intelligence-assist-docs/issues/new)
 - **📖 Documentation** - You're here! Explore more in the sidebar
 
 ## What's Next?

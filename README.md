@@ -180,7 +180,7 @@ This documentation is licensed under the MIT License. See [LICENSE](LICENSE) for
 
 - 📖 [Documentation Issues](https://github.com/intelligence-assist/intelligence-assist-docs/issues)
 - 💬 [Discussions](https://github.com/orgs/intelligence-assist/discussions)
-- 📧 [Email Support](mailto:support@intelligence-assist.com)
+- 🐛 [Submit an Issue](https://github.com/intelligence-assist/intelligence-assist-docs/issues/new)
 
 ---
 

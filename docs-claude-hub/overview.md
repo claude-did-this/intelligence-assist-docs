@@ -59,4 +59,4 @@ Ready to integrate Claude Hub with your repository? Check out our [Installation 
 - 📖 [Documentation](./getting-started/installation.md)
 - 🐛 [Report Issues](https://github.com/intelligence-assist/claude-hub/issues)
 - 💬 [Discussions](https://github.com/intelligence-assist/claude-hub/discussions)
-- 📧 [Contact Us](mailto:support@intelligence-assist.com)
+- 🆘 [Submit an Issue](https://github.com/intelligence-assist/claude-hub/issues/new)
