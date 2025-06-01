@@ -1,391 +1,339 @@
-# Automated PR Reviews
+---
+title: Automated PR Review Workflow
+---
 
-Claude Hub provides comprehensive automated code reviews for pull requests, analyzing code quality, security, performance, and adherence to best practices.
+:::info
+This documentation is automatically synchronized from the [claude-hub repository](https://github.com/intelligence-assist/claude-hub). 
+Last updated: 2025-06-01
+:::
+
+
+
+# Automated PR Review Workflow
+
+This document describes the automated pull request review workflow that triggers when all CI checks pass on a PR.
 
 ## Overview
 
-The automated PR review system:
-- **Triggers** automatically when all CI checks pass
-- **Analyzes** code changes comprehensively
-- **Provides** detailed feedback and suggestions
-- **Posts** review comments directly to GitHub
-- **Integrates** seamlessly with your existing workflow
+The Claude GitHub webhook service automatically reviews pull requests when all status checks complete successfully. This helps maintain code quality by providing consistent, thorough reviews without manual intervention.
 
-## Trigger Mechanism
+## Workflow Sequence
 
-### Check Suite Completion
+```mermaid
+sequenceDiagram
+    participant GH as GitHub
+    participant WH as Webhook Service
+    participant GS as GitHub Service
+    participant CS as Claude Service
+    participant DC as Docker Container
 
-Reviews are triggered by the `check_suite` webhook event with `conclusion: 'success'`:
+    Note over GH: PR checks complete
+    GH->>WH: check_suite webhook<br/>(action: completed)
+    WH->>WH: Verify webhook signature
+    WH->>WH: Check if conclusion = success
+    
+    alt No PRs in check_suite
+        WH->>GH: 200 OK<br/>"Webhook processed"
+    else Has PRs
+        loop For each PR
+            WH->>GS: getCombinedStatus(sha)
+            GS->>GH: GET /repos/:owner/:repo/commits/:sha/status
+            GH->>GS: Combined status response
+            GS->>WH: Status state & count
+            
+            alt Status != success
+                WH->>WH: Skip this PR<br/>(log reason)
+            else Status = success
+                WH->>CS: processCommand()<br/>(PR review prompt)
+                CS->>DC: Spawn Claude container
+                DC->>DC: Clone repository
+                DC->>DC: Checkout PR branch
+                DC->>GH: gh pr view
+                DC->>GH: gh pr diff
+                DC->>DC: Analyze code changes
+                DC->>GH: gh pr comment<br/>(line comments)
+                DC->>GH: gh pr review<br/>(approve/request changes)
+                DC->>CS: Review complete
+                CS->>WH: Response
+            end
+        end
+        WH->>GH: 200 OK<br/>"PR review triggered"
+    end
+```
+
+## Detailed Flow
+
+### 1. Webhook Receipt
+
+```mermaid
+flowchart TD
+    A[GitHub check_suite event] --> B{Event type?}
+    B -->|check_suite| C{Action = completed?}
+    B -->|Other| D[Process other events]
+    C -->|No| E[Skip processing]
+    C -->|Yes| F{Conclusion = success?}
+    F -->|No| G[Log skip reason]
+    F -->|Yes| H{Has pull_requests?}
+    H -->|No| I[Check for head_branch]
+    H -->|Yes| J[Process each PR]
+    I -->|Has branch| K[Log warning - possible fork]
+    I -->|No branch| L[Return success]
+```
+
+### 2. PR Status Verification
+
+```mermaid
+flowchart TD
+    A[For each PR] --> B[Get commit SHA]
+    B --> C{SHA available?}
+    C -->|No| D[Log error & skip]
+    C -->|Yes| E[Call GitHub API]
+    E --> F[Get combined status]
+    F --> G{All checks passed?}
+    G -->|No| H[Skip PR review]
+    G -->|Yes| I[Trigger Claude review]
+```
+
+### 3. Claude Review Process
+
+```mermaid
+flowchart TD
+    A[Prepare review prompt] --> B[Launch Claude container]
+    B --> C[Clone repository]
+    C --> D[Checkout PR branch]
+    D --> E[Analyze PR details]
+    E --> F[Review code changes]
+    F --> G{Issues found?}
+    G -->|Yes| H[Add line comments]
+    G -->|No| I[Skip comments]
+    H --> J[Create review summary]
+    I --> J
+    J --> K{Approve PR?}
+    K -->|Yes| L[gh pr review --approve]
+    K -->|No| M[gh pr review --request-changes]
+    L --> N[Return response]
+    M --> N
+```
+
+## Key Components
+
+### GitHub Controller (`githubController.js`)
+
+Handles incoming webhooks and orchestrates the review process:
 
 ```javascript
-// Trigger conditions
-if (event === 'check_suite' && 
-    payload.check_suite.conclusion === 'success') {
-  // Find all PRs associated with this check suite
-  // Trigger comprehensive review for each PR
+// Webhook handler for check_suite events
+if (event === 'check_suite' && payload.action === 'completed') {
+  const checkSuite = payload.check_suite;
+  
+  // Only process successful check suites with PRs
+  if (checkSuite.conclusion === 'success' && 
+      checkSuite.pull_requests?.length > 0) {
+    
+    for (const pr of checkSuite.pull_requests) {
+      // Verify all status checks passed
+      const combinedStatus = await githubService.getCombinedStatus({
+        repoOwner: repo.owner.login,
+        repoName: repo.name,
+        ref: pr.head?.sha || checkSuite.head_sha
+      });
+      
+      if (combinedStatus.state === 'success') {
+        // Trigger Claude review
+        await claudeService.processCommand({
+          repoFullName: repo.full_name,
+          issueNumber: pr.number,
+          command: prReviewPrompt,
+          isPullRequest: true,
+          branchName: pr.head.ref
+        });
+      }
+    }
+  }
 }
 ```
 
-### Configuration Options
+### GitHub Service (`githubService.js`)
 
-#### Wait for All Checks (Default)
-```bash
-PR_REVIEW_WAIT_FOR_ALL_CHECKS=true
-PR_REVIEW_DEBOUNCE_MS=5000
-```
-
-- **Waits** for all check suites to complete successfully
-- **Prevents** duplicate reviews from multiple check suites
-- **Debounces** for 5 seconds to handle eventual consistency
-
-#### Specific Workflow Trigger
-```bash
-PR_REVIEW_WAIT_FOR_ALL_CHECKS=false
-PR_REVIEW_TRIGGER_WORKFLOW="Pull Request CI"
-```
-
-- **Triggers** only on specific workflow completion
-- **Useful** for repositories with multiple CI workflows
-- **Reduces** noise from non-critical checks
-
-## Review Analysis
-
-### Code Quality Assessment
-
-#### Code Smells Detection
-- **Long methods/functions**: Complexity analysis
-- **Duplicate code**: Pattern recognition
-- **Dead code**: Unused variable/function detection
-- **Code formatting**: Style consistency checks
-- **Naming conventions**: Variable/function naming review
-
-#### Best Practices Enforcement
-- **Design patterns**: Appropriate pattern usage
-- **SOLID principles**: Architecture adherence
-- **Code organization**: File structure and modularity
-- **Documentation**: Comment quality and coverage
-- **Error handling**: Exception management review
-
-### Security Analysis
-
-#### Vulnerability Detection
-- **SQL injection**: Query parameterization checks
-- **XSS prevention**: Input sanitization review
-- **Authentication**: Session management analysis
-- **Authorization**: Access control verification
-- **Secrets exposure**: Credential scanning
-
-#### Security Best Practices
-- **Input validation**: Data sanitization checks
-- **Output encoding**: XSS prevention measures
-- **Cryptography**: Secure algorithm usage
-- **Dependencies**: Known vulnerability scanning
-- **Configuration**: Security setting review
-
-### Performance Optimization
-
-#### Efficiency Analysis
-- **Algorithm complexity**: Big O analysis
-- **Database queries**: N+1 problem detection
-- **Memory usage**: Memory leak identification
-- **Caching opportunities**: Performance optimization suggestions
-- **Resource management**: Connection and resource cleanup
-
-#### Scalability Considerations
-- **Concurrent execution**: Thread safety analysis
-- **Resource contention**: Bottleneck identification
-- **Load handling**: Capacity planning insights
-- **Optimization patterns**: Performance improvement suggestions
-
-## Review Output
-
-### Line-Specific Comments
-
-Claude posts targeted comments on specific lines:
-
-```markdown
-**🔍 Code Quality Issue**
-
-This method is quite long (45 lines) and handles multiple responsibilities. 
-Consider breaking it down into smaller, focused methods:
-
-1. Extract user validation logic
-2. Separate database operations
-3. Create dedicated response formatting
-
-This would improve readability and testability.
-```
-
-### General Review Comments
-
-Overall assessment posted as PR review:
-
-```markdown
-## 🤖 Automated Code Review
-
-### ✅ Strengths
-- Good error handling implementation
-- Comprehensive test coverage
-- Clear variable naming
-
-### ⚠️ Areas for Improvement
-- Consider adding input validation for user data
-- Database connection could benefit from connection pooling
-- Some methods could be extracted for better modularity
-
-### 🔒 Security Notes
-- Verify SQL query parameterization in user service
-- Consider rate limiting for API endpoints
-
-### 🚀 Performance Suggestions
-- Add caching for frequently accessed user data
-- Consider pagination for large result sets
-
-**Overall Assessment**: ✅ Approved with suggestions
-```
-
-### Review Actions
-
-Claude can:
-- **Approve** PRs that meet quality standards
-- **Request changes** for significant issues
-- **Comment** with suggestions and feedback
-- **Flag** security or critical issues
-
-## Integration with GitHub
-
-### GitHub CLI Usage
-
-Reviews are posted using GitHub CLI commands:
-
-```bash
-# Post review with overall feedback
-gh pr review 123 --approve --body "Automated review feedback..."
-
-# Add line-specific comments
-gh pr review 123 --comment --body "Suggestion for line 45..."
-```
-
-### Review Status Integration
-
-- **Check runs**: Creates check run for review status
-- **Status checks**: Integrates with branch protection rules
-- **Review requirements**: Satisfies review requirements if approved
-- **Merge blocking**: Can block merges for critical issues
-
-## Workflow Integration
-
-### Branch Protection Rules
-
-Configure branch protection to require PR reviews:
-
-```yaml
-# .github/branch-protection.yml
-protection_rules:
-  main:
-    required_status_checks:
-      strict: true
-      contexts:
-        - "claude-hub/pr-review"
-    required_pull_request_reviews:
-      required_approving_review_count: 1
-      dismiss_stale_reviews: true
-```
-
-### CI/CD Pipeline Integration
-
-```yaml
-# .github/workflows/pr.yml
-name: Pull Request CI
-on:
-  pull_request:
-    branches: [main]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run tests
-        run: npm test
-      
-  # Claude Hub review triggers automatically after all checks pass
-```
-
-## Customization
-
-### Review Focus Areas
-
-Customize review emphasis by file patterns:
+Interfaces with GitHub API to check PR status:
 
 ```javascript
-const reviewConfig = {
-  security: {
-    patterns: ['**/auth/**', '**/security/**', '**/*auth*'],
-    weight: 'high'
-  },
-  performance: {
-    patterns: ['**/api/**', '**/services/**'],
-    weight: 'medium'
-  },
-  documentation: {
-    patterns: ['**/docs/**', '**/*.md'],
-    weight: 'low'
-  }
-};
+async function getCombinedStatus({ repoOwner, repoName, ref }) {
+  const url = `https://api.github.com/repos/${repoOwner}/${repoName}/commits/${ref}/status`;
+  
+  const response = await axios.get(url, {
+    headers: {
+      Authorization: `token ${githubToken}`,
+      Accept: 'application/vnd.github.v3+json'
+    }
+  });
+  
+  return {
+    state: response.data.state, // success, pending, failure
+    total_count: response.data.total_count,
+    statuses: response.data.statuses
+  };
+}
 ```
 
-### Language-Specific Rules
+### Claude Service (`claudeService.js`)
 
-Different analysis for different languages:
+Manages Claude container execution:
 
 ```javascript
-const languageRules = {
-  javascript: {
-    focus: ['async/await patterns', 'error handling', 'security'],
-    tools: ['eslint', 'security-audit']
-  },
-  python: {
-    focus: ['PEP 8 compliance', 'type hints', 'documentation'],
-    tools: ['pylint', 'mypy', 'black']
-  },
-  java: {
-    focus: ['design patterns', 'exception handling', 'performance'],
-    tools: ['spotbugs', 'pmd', 'checkstyle']
-  }
-};
+async function processCommand({ repoFullName, issueNumber, command, isPullRequest, branchName }) {
+  // Spawn privileged container with Claude
+  const container = await docker.run('claudecode', {
+    env: {
+      REPO_FULL_NAME: repoFullName,
+      ISSUE_NUMBER: issueNumber,
+      IS_PULL_REQUEST: isPullRequest,
+      BRANCH_NAME: branchName
+    },
+    privileged: true,
+    capabilities: ['NET_ADMIN', 'NET_RAW', 'SYS_ADMIN']
+  });
+  
+  // Execute review command
+  const result = await container.exec(['claude', 'review', '--pr', issueNumber]);
+  return result;
+}
 ```
 
-### Team Preferences
+## Configuration
 
-Configure review style for your team:
+### Required Environment Variables
 
-```bash
-# Review strictness level
-PR_REVIEW_STRICTNESS=balanced  # strict, balanced, lenient
+- `GITHUB_TOKEN`: GitHub personal access token with repo and workflow permissions
+- `GITHUB_WEBHOOK_SECRET`: Secret for validating webhook payloads
+- `BOT_USERNAME`: GitHub username that triggers reviews (e.g., `@ClaudeBot`)
+- `ANTHROPIC_API_KEY`: API key for Claude access
 
-# Focus areas
-PR_REVIEW_FOCUS=security,performance,maintainability
+### GitHub Webhook Configuration
 
-# Review tone
-PR_REVIEW_TONE=constructive  # constructive, detailed, brief
-```
+1. Go to repository Settings → Webhooks
+2. Add webhook with URL: `https://your-domain/api/webhooks/github`
+3. Content type: `application/json`
+4. Secret: Use the value from `GITHUB_WEBHOOK_SECRET`
+5. Events to trigger:
+   - Check suites
+   - Pull requests (optional, for manual triggers)
+   - Issue comments (for manual triggers via mentions)
 
-## Quality Metrics
+## Review Process Details
 
-### Review Effectiveness
+### What Claude Reviews
 
-Track review impact:
+1. **Security vulnerabilities**
+   - SQL injection risks
+   - XSS vulnerabilities
+   - Authentication/authorization issues
+   - Sensitive data exposure
 
-- **Issue Prevention**: Bugs caught before merge
-- **Code Quality Improvement**: Metrics over time
-- **Security Enhancement**: Vulnerabilities identified
-- **Learning Acceleration**: Team skill development
+2. **Code quality**
+   - Logic errors and edge cases
+   - Performance issues
+   - Code organization and readability
+   - Error handling completeness
 
-### Performance Metrics
+3. **Best practices**
+   - Design patterns usage
+   - Testing coverage
+   - Documentation quality
+   - Dependency management
 
-Monitor review system:
+### Review Output
 
-- **Review Time**: Average time from trigger to completion
-- **Coverage**: Percentage of PRs reviewed
-- **Accuracy**: Manual override rate
-- **Team Adoption**: Developer feedback and usage
+Claude provides feedback through:
 
-## Best Practices
-
-### For Developers
-
-1. **Small PRs**: Keep changes focused and reviewable
-2. **Clear Descriptions**: Provide context for changes
-3. **Self-Review**: Review your own code before submitting
-4. **Address Feedback**: Respond to review suggestions promptly
-5. **Learn from Reviews**: Use feedback to improve coding practices
-
-### for Teams
-
-1. **Review Guidelines**: Establish team standards for reviews
-2. **Training**: Educate team on review feedback interpretation
-3. **Feedback Culture**: Encourage constructive discussion
-4. **Continuous Improvement**: Regularly assess review effectiveness
-5. **Tool Integration**: Combine with other quality tools
-
-### For Organizations
-
-1. **Consistent Standards**: Maintain consistent review criteria
-2. **Security Focus**: Prioritize security review feedback
-3. **Metrics Tracking**: Monitor code quality trends
-4. **Tool Evolution**: Regularly update review configurations
-5. **Knowledge Sharing**: Share learnings across teams
+1. **Line comments**: Specific issues on exact code lines
+2. **General comments**: Overall observations and suggestions
+3. **Review decision**: 
+   - ✅ Approve: Code meets quality standards
+   - 🔄 Request changes: Issues need addressing
+   - 💬 Comment: Observations without blocking
 
 ## Troubleshooting
 
+### PR Review Not Triggering
+
+```mermaid
+flowchart TD
+    A[Review not triggered] --> B{Check logs}
+    B --> C{Webhook received?}
+    C -->|No| D[Verify webhook config]
+    C -->|Yes| E{check_suite event?}
+    E -->|No| F[Wrong event type]
+    E -->|Yes| G{Action = completed?}
+    G -->|No| H[Waiting for completion]
+    G -->|Yes| I{Conclusion = success?}
+    I -->|No| J[Checks failed]
+    I -->|Yes| K{PRs in payload?}
+    K -->|No| L[No PRs associated]
+    K -->|Yes| M{Combined status = success?}
+    M -->|No| N[Some checks pending/failed]
+    M -->|Yes| O[Check Claude service logs]
+```
+
 ### Common Issues
 
-#### 1. Reviews Not Triggering
-```
-PR created but no automated review posted
-```
+1. **Missing pull_requests in webhook payload**
+   - Usually occurs with PRs from forks
+   - GitHub may not include PR data in check_suite events for security
 
-**Check**:
-- CI checks are completing successfully
-- Webhook events are being received
-- PR review configuration is enabled
-- GitHub token has review permissions
+2. **Combined status shows pending**
+   - Some required checks haven't completed
+   - Check GitHub PR page for status details
 
-#### 2. Incomplete Reviews
-```
-Review posted but missing analysis sections
-```
+3. **Authentication errors**
+   - Verify GITHUB_TOKEN has correct permissions
+   - Ensure token hasn't expired
 
-**Possible Causes**:
-- Large PR size causing timeout
-- Complex code analysis taking too long
-- API rate limits being hit
-- Container resource constraints
+4. **Container execution failures**
+   - Check Docker daemon is running
+   - Verify Claude container image exists
+   - Ensure sufficient permissions for privileged containers
 
-#### 3. False Positives
-```
-Review flags correct code as problematic
-```
+## Testing
 
-**Solutions**:
-- Adjust review strictness settings
-- Add project-specific context
-- Implement allow-list for known patterns
-- Provide feedback for model improvement
+### Manual Testing
 
-### Debug Configuration
+1. Create a test PR with passing checks
+2. Monitor webhook logs: `docker compose logs -f webhook`
+3. Verify review appears on PR
 
-Enable detailed review logging:
+### Automated Testing
 
 ```bash
-LOG_LEVEL=debug
-PR_REVIEW_DEBUG=true
-PR_REVIEW_VERBOSE=true
+# Run unit tests
+npm run test:unit
+
+# Run integration tests
+npm run test:integration
+
+# Test specific webhook handling
+npm test -- --testPathPattern=githubController-check-suite
 ```
 
-### Manual Review Trigger
+## Performance Considerations
 
-Test review functionality manually:
+- Each PR review spawns a new container (isolation)
+- Reviews run sequentially within a check_suite
+- Typical review time: 30-60 seconds per PR
+- Container cleanup happens automatically
 
-```bash
-# Trigger review for specific PR
-./cli/claude-webhook owner/repo "Review this PR" -p -b feature-branch
+## Security Notes
 
-# Test with specific focus
-./cli/claude-webhook owner/repo "Review security aspects of this PR" -p -b feature-branch
-```
+1. **Webhook validation**: All webhooks are verified using HMAC-SHA256
+2. **Token storage**: Use secure credential management (not env vars in production)
+3. **Container isolation**: Each review runs in an isolated container
+4. **Network policies**: Containers have restricted network access
+5. **Code execution**: Claude only analyzes, doesn't execute PR code
 
 ## Future Enhancements
 
-Planned improvements:
-
-- **Learning from Feedback**: Adapt based on developer responses
-- **Custom Rule Engine**: Repository-specific review rules
-- **Integration Webhooks**: Notify external systems of review results
-- **Review Templates**: Standardized review formats
-- **Multi-Language Support**: Enhanced analysis for various languages
-- **Performance Optimization**: Faster review processing
-- **Review Summaries**: Team-wide code quality reports
-
-The automated PR review system continuously evolves to provide more accurate, helpful, and contextually relevant feedback for your development workflow.
+- [ ] Parallel PR reviews for multiple PRs
+- [ ] Caching for faster repository cloning
+- [ ] Custom review rules per repository
+- [ ] Review quality metrics and analytics
+- [ ] Integration with other CI/CD tools

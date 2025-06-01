@@ -1,0 +1,150 @@
+name: Claude DocOps Steward
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      steward_mode:
+        description: 'Steward operation mode'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - monitor
+          - quality
+          - drift
+          - improve
+          - fix
+  
+  # Scheduled stewardship (weekly on Monday at 9 AM UTC)
+  schedule:
+    - cron: '0 9 * * MON'
+  
+  # Trigger on documentation changes
+  push:
+    paths:
+      - 'docs-claude-hub/**'
+      - 'scripts/sync-claude-hub-docs.js'
+      - 'scripts/claude-docops-steward.js'
+
+jobs:
+  docops-steward:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout intelligence-assist-docs
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Checkout claude-hub repository
+        uses: actions/checkout@v4
+        with:
+          repository: intelligence-assist/claude-hub
+          path: claude-hub
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Setup Claude Code
+        run: |
+          # Install Claude Code CLI
+          curl -fsSL https://claude.ai/cli/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      
+      - name: Authenticate Claude Code
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # Configure Claude Code with API key
+          claude config set api-key $ANTHROPIC_API_KEY
+      
+      - name: Run DocOps Steward
+        env:
+          STEWARD_MODE: ${{ github.event.inputs.steward_mode || 'full' }}
+        run: |
+          node scripts/claude-docops-steward.js $STEWARD_MODE
+      
+      - name: Upload steward report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docops-steward-report
+          path: |
+            docops-steward-report.md
+            sync-report.md
+          retention-days: 30
+      
+      - name: Check for documentation improvements
+        id: improvements-check
+        run: |
+          if [ -f "docops-steward-report.md" ]; then
+            # Check if there are actionable improvements
+            if grep -q "High priority" docops-steward-report.md || grep -q "Medium priority" docops-steward-report.md; then
+              echo "improvements=true" >> $GITHUB_OUTPUT
+            fi
+          fi
+      
+      - name: Create issue for documentation improvements
+        if: steps.improvements-check.outputs.improvements == 'true'
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "📚 Documentation Improvements Identified by DocOps Steward"
+          content-filepath: docops-steward-report.md
+          labels: |
+            documentation
+            enhancement
+            steward-generated
+      
+      - name: Comment on existing steward issue (if exists)
+        if: steps.improvements-check.outputs.improvements == 'true'
+        uses: peter-evans/find-comment@v3
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: 'DocOps Steward Report'
+      
+      - name: Update or create steward comment
+        if: steps.improvements-check.outputs.improvements == 'true'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ## 🤖 DocOps Steward Report
+            
+            The Claude Code DocOps Steward has identified documentation improvements.
+            
+            📋 **Full Report**: See the uploaded artifact for detailed analysis
+            📅 **Generated**: ${{ github.run_id }}
+            🔄 **Mode**: ${{ env.STEWARD_MODE }}
+            
+            The steward will continue monitoring and suggesting improvements automatically.
+          edit-mode: replace
+
+  notify-steward-completion:
+    needs: docops-steward
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Notify steward completion
+        run: |
+          echo "DocOps Steward cycle completed with status: ${{ needs.docops-steward.result }}"
+          if [ "${{ needs.docops-steward.result }}" = "success" ]; then
+            echo "✅ Stewardship completed successfully"
+          else
+            echo "❌ Stewardship encountered issues"
+          fi

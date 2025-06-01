@@ -1,0 +1,102 @@
+name: Sync Claude Hub Documentation
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+  
+  # Scheduled sync (daily at 2 AM UTC)
+  schedule:
+    - cron: '0 2 * * *'
+  
+  # Trigger when this workflow file changes
+  push:
+    paths:
+      - '.github/workflows/sync-claude-hub-docs.yml'
+      - 'scripts/sync-claude-hub-docs.js'
+
+jobs:
+  sync-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout intelligence-assist-docs
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Checkout claude-hub repository
+        uses: actions/checkout@v4
+        with:
+          repository: intelligence-assist/claude-hub
+          path: claude-hub
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run documentation sync
+        run: node scripts/sync-claude-hub-docs.js
+      
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code || echo "changes=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push changes
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "📚 Sync claude-hub documentation
+          
+          Auto-sync from claude-hub repository
+          
+          🤖 Generated with GitHub Actions"
+          git push
+      
+      - name: Create Pull Request (if manual trigger)
+        if: github.event_name == 'workflow_dispatch' && steps.git-check.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            📚 Sync claude-hub documentation
+            
+            Auto-sync from claude-hub repository
+            
+            🤖 Generated with GitHub Actions
+          title: "📚 Sync claude-hub documentation"
+          body: |
+            ## Summary
+            - Automatically synchronized documentation from the claude-hub repository
+            - Updated docs-claude-hub/ directory with latest content
+            
+            ## Changes
+            - Synced markdown files from claude-hub/docs/
+            - Updated frontmatter and links for Docusaurus
+            - Added sync notices to track update dates
+            
+            ## Review Notes
+            - This is an automated update from the claude-hub repository
+            - Review the sync-report.md for detailed mapping information
+            - Verify that links and formatting are correct
+            
+            🤖 Generated with GitHub Actions
+          branch: sync/claude-hub-docs
+          base: main
+      
+      - name: Upload sync report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sync-report
+          path: sync-report.md
+          retention-days: 30

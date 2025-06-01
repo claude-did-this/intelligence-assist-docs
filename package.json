@@ -12,7 +12,14 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "sync:claude-hub": "node scripts/sync-claude-hub-docs.js",
+    "steward:full": "node scripts/claude-docops-steward.js full",
+    "steward:monitor": "node scripts/claude-docops-steward.js monitor",
+    "steward:quality": "node scripts/claude-docops-steward.js quality",
+    "steward:drift": "node scripts/claude-docops-steward.js drift",
+    "steward:improve": "node scripts/claude-docops-steward.js improve",
+    "steward:fix": "node scripts/claude-docops-steward.js fix"
   },
   "dependencies": {
     "@docusaurus/core": "3.8.0",
