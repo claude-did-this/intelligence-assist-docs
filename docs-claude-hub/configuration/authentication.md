@@ -3,7 +3,7 @@ title: Claude Authentication Guide
 ---
 
 :::info
-This documentation is automatically synchronized from the [claude-hub repository](https://github.com/intelligence-assist/claude-hub). 
+This documentation is automatically synchronized from the [claude-hub repository](https://github.com/claude-did-this/claude-hub). 
 Last updated: 2025-06-01
 :::
 
@@ -112,7 +112,7 @@ AWS-integrated Claude access for enterprise deployments.
 #### 1. Configure AWS Credentials
 ```bash
 # Option A: AWS Profile (Recommended)
-./scripts/aws/create-aws-profile.sh
+./scripts/aws/setup-aws-profiles.sh
 
 # Option B: Environment Variables
 export AWS_ACCESS_KEY_ID=your_access_key
@@ -124,7 +124,7 @@ export AWS_REGION=us-east-1
 ```bash
 # Add to .env file
 CLAUDE_CODE_USE_BEDROCK=1
-ANTHROPIC_MODEL=us.anthropic.claude-3-7-sonnet-20250219-v1:0
+ANTHROPIC_MODEL=anthropic.claude-3-sonnet-20240229-v1:0
 AWS_REGION=us-east-1
 
 # If using profiles
@@ -173,7 +173,7 @@ ANTHROPIC_API_KEY=sk-ant-your-key
 
 # Method 3: AWS Bedrock
 CLAUDE_CODE_USE_BEDROCK=1
-ANTHROPIC_MODEL=us.anthropic.claude-3-7-sonnet-20250219-v1:0
+ANTHROPIC_MODEL=anthropic.claude-3-sonnet-20240229-v1:0
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=your_key_id
 AWS_SECRET_ACCESS_KEY=your_secret_key
@@ -199,7 +199,7 @@ ANTHROPIC_API_KEY=sk-ant-your-production-key
 
 # Enterprise with Bedrock
 CLAUDE_CODE_USE_BEDROCK=1
-ANTHROPIC_MODEL=us.anthropic.claude-3-7-sonnet-20250219-v1:0
+ANTHROPIC_MODEL=anthropic.claude-3-sonnet-20240229-v1:0
 USE_AWS_PROFILE=true
 AWS_PROFILE=production-claude
 ```
@@ -226,7 +226,7 @@ AWS_PROFILE=production-claude
 - [Anthropic Console](https://console.anthropic.com/) - API key management
 - [AWS Bedrock Documentation](https://docs.aws.amazon.com/bedrock/) - Enterprise setup
 - [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code) - Official Claude CLI docs
-- [Setup Container Deep Dive](../getting-started/setup-container-guide.md) - Detailed setup container documentation
+- [Setup Container Deep Dive](./setup-container-guide.md) - Detailed setup container documentation
 
 ---
 

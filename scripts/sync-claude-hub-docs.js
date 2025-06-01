@@ -85,7 +85,7 @@ title: ${title}
   
   // Add sync notice
   const syncNotice = `:::info
-This documentation is automatically synchronized from the [claude-hub repository](https://github.com/intelligence-assist/claude-hub). 
+This documentation is automatically synchronized from the [claude-hub repository](https://github.com/claude-did-this/claude-hub). 
 Last updated: ${new Date().toISOString().split('T')[0]}
 :::
 

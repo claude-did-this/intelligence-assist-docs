@@ -3,7 +3,7 @@ title: GitHub Workflow with Claude Webhook
 ---
 
 :::info
-This documentation is automatically synchronized from the [claude-hub repository](https://github.com/intelligence-assist/claude-hub). 
+This documentation is automatically synchronized from the [claude-hub repository](https://github.com/claude-did-this/claude-hub). 
 Last updated: 2025-06-01
 :::
 
@@ -95,4 +95,4 @@ Environment variables required:
 - `AWS_SECRET_ACCESS_KEY`: AWS secret key
 - `AWS_REGION`: AWS region (default: us-east-1)
 - `CLAUDE_CODE_USE_BEDROCK`: Set to "1" to use Bedrock
-- `ANTHROPIC_MODEL`: Model to use (e.g., claude-3-sonnet-20241022)
+- `ANTHROPIC_MODEL`: Model to use (e.g., anthropic.claude-3-sonnet-20240229-v1:0)

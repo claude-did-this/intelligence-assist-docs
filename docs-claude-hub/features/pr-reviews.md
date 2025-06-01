@@ -3,7 +3,7 @@ title: Automated PR Review Workflow
 ---
 
 :::info
-This documentation is automatically synchronized from the [claude-hub repository](https://github.com/intelligence-assist/claude-hub). 
+This documentation is automatically synchronized from the [claude-hub repository](https://github.com/claude-did-this/claude-hub). 
 Last updated: 2025-06-01
 :::
 

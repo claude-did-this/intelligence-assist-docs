@@ -3,7 +3,7 @@ title: Claude GitHub Webhook Container Setup
 ---
 
 :::info
-This documentation is automatically synchronized from the [claude-hub repository](https://github.com/intelligence-assist/claude-hub). 
+This documentation is automatically synchronized from the [claude-hub repository](https://github.com/claude-did-this/claude-hub). 
 Last updated: 2025-06-01
 :::
 
@@ -28,7 +28,7 @@ Container mode provides several benefits:
 ## Requirements
 
 - Docker
-- Node.js (v14+)
+- Node.js (v20+)
 - GitHub Personal Access Token (with repo scope)
 - Anthropic API Key or AWS Bedrock credentials
 
@@ -61,15 +61,15 @@ AWS_REGION=us-west-2
 
 ### 2. Building the Claude Container
 
-Run the provided script to build the Claude Code container:
+Build the Claude Code container:
 
 ```bash
-./build-claude-container.sh
+docker build -f Dockerfile.claudecode -t claudecode:latest .
 ```
 
-This script will:
+This will:
 - Build the Docker container with Claude Code CLI
-- Automatically update your .env file to enable container mode
+- Create the claudecode:latest image for use by the service
 
 ### 3. Running the Service
 

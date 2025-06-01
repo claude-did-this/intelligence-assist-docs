@@ -3,7 +3,7 @@ title: Complete Claude GitHub Webhook Workflow
 ---
 
 :::info
-This documentation is automatically synchronized from the [claude-hub repository](https://github.com/intelligence-assist/claude-hub). 
+This documentation is automatically synchronized from the [claude-hub repository](https://github.com/claude-did-this/claude-hub). 
 Last updated: 2025-06-01
 :::
 
@@ -59,7 +59,7 @@ GitHub → Webhook Service → Docker Container → Claude API
 **Service**: `src/services/claudeService.ts`
 **Method**: `processCommand()`
 
-1. Builds Docker image if not exists: `claude-code-runner:latest`
+1. Builds Docker image if not exists: `claudecode:latest`
 2. Creates unique container name
 3. Prepares environment variables:
    ```
@@ -150,7 +150,7 @@ GitHub → Webhook Service → Docker Container → Claude API
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `AWS_REGION` | AWS region for Bedrock | `us-east-1` |
-| `ANTHROPIC_MODEL` | Claude model to use | `claude-3-sonnet-20241022` |
+| `ANTHROPIC_MODEL` | Claude model to use | `anthropic.claude-3-sonnet-20240229-v1:0` |
 | `CLAUDE_CODE_USE_BEDROCK` | Use Bedrock (vs API) | `1` |
 | `PORT` | Service port | `3002` |
 | `LOG_LEVEL` | Logging verbosity | `info` |
@@ -162,7 +162,7 @@ GitHub → Webhook Service → Docker Container → Claude API
 
 1. `Dockerfile.claudecode` defines Claude execution environment
 2. Installs:
-   - Node.js 18
+   - Node.js 20
    - GitHub CLI
    - AWS CLI
    - Claude Code CLI
@@ -205,14 +205,14 @@ GitHub → Webhook Service → Docker Container → Claude API
 ### Manual Testing
 
 ```bash
-# Test webhook locally
-node test-webhook-manual.js
+# Test webhook locally using CLI
+./cli/claude-webhook owner/repo "Your command"
 
 # Test Claude API directly
-node test-claude-api.js owner/repo
+node test/test-claude-api.js owner/repo
 
 # Test with container
-node test-claude-api.js owner/repo container "Your command"
+node test/test-claude-api.js owner/repo container "Your command"
 ```
 
 ### Integration Testing
@@ -279,7 +279,7 @@ docker compose logs -f webhook
 docker ps -a | grep claude-code
 
 # Debug container directly
-./debug-container.sh
+docker exec -it <container-id> /bin/bash
 
 # Check Docker connectivity
 curl --unix-socket /var/run/docker.sock http://localhost/info

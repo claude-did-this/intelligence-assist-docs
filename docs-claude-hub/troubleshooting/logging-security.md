@@ -3,7 +3,7 @@ title: Logging Security and Credential Redaction
 ---
 
 :::info
-This documentation is automatically synchronized from the [claude-hub repository](https://github.com/intelligence-assist/claude-hub). 
+This documentation is automatically synchronized from the [claude-hub repository](https://github.com/claude-did-this/claude-hub). 
 Last updated: 2025-06-01
 :::
 
@@ -281,6 +281,6 @@ The logger automatically redacts these environment variables when they appear in
 
 ## Related Documentation
 
-- [AWS Authentication Best Practices](../configuration/aws-authentication.md)
+- [AWS Authentication Best Practices](./aws-authentication-best-practices.md)
 - [Credential Security](./credential-security.md)
-- [Container Security](../configuration/container-limitations.md)
+- [Container Security](./container-limitations.md)

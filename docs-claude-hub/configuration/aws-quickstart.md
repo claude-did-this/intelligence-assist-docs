@@ -3,7 +3,7 @@ title: AWS Profile Quick Start
 ---
 
 :::info
-This documentation is automatically synchronized from the [claude-hub repository](https://github.com/intelligence-assist/claude-hub). 
+This documentation is automatically synchronized from the [claude-hub repository](https://github.com/claude-did-this/claude-hub). 
 Last updated: 2025-06-01
 :::
 
@@ -33,7 +33,7 @@ For automated/scripted setup:
 
 ```bash
 # Create a profile with your credentials
-./scripts/create-aws-profile.sh claude-webhook YOUR_ACCESS_KEY YOUR_SECRET_KEY us-west-2
+./scripts/aws/create-aws-profile.sh claude-webhook YOUR_ACCESS_KEY YOUR_SECRET_KEY us-west-2
 
 # Update .env file
 echo "USE_AWS_PROFILE=true" >> .env
@@ -92,10 +92,10 @@ You can create multiple profiles:
 
 ```bash
 # Development
-./scripts/create-aws-profile.sh claude-dev DEV_KEY DEV_SECRET
+./scripts/aws/create-aws-profile.sh claude-dev DEV_KEY DEV_SECRET
 
 # Production
-./scripts/create-aws-profile.sh claude-prod PROD_KEY PROD_SECRET
+./scripts/aws/create-aws-profile.sh claude-prod PROD_KEY PROD_SECRET
 
 # Switch between them in .env
 AWS_PROFILE=claude-dev  # or claude-prod

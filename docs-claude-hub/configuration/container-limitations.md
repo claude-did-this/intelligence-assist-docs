@@ -3,7 +3,7 @@ title: Container Mode Limitations
 ---
 
 :::info
-This documentation is automatically synchronized from the [claude-hub repository](https://github.com/intelligence-assist/claude-hub). 
+This documentation is automatically synchronized from the [claude-hub repository](https://github.com/claude-did-this/claude-hub). 
 Last updated: 2025-06-01
 :::
 
@@ -92,9 +92,10 @@ This approach provides value while the container execution issues are resolved.
 You can test the current implementation using the provided test utilities:
 
 ```bash
-# Test with a repository (uses predefined response if known)
-./test-container.js owner/repo "What is this repository about?"
+# Test with a repository using the CLI
+./cli/claude-webhook owner/repo "What is this repository about?"
 
-# Test with any other repository (uses automatic analysis)
-./test-container.js n8n-io/n8n "What is this repository about?"
+# Test with Docker directly
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock claudecode:latest \
+  claude "What is this repository about?"
 ```
