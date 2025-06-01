@@ -13,12 +13,12 @@ Last updated: 2025-06-01
 
 [![Main Pipeline](https://github.com/intelligence-assist/claude-hub/actions/workflows/main.yml/badge.svg)](https://github.com/intelligence-assist/claude-hub/actions/workflows/main.yml)
 [![Security Scans](https://github.com/intelligence-assist/claude-hub/actions/workflows/security.yml/badge.svg)](https://github.com/intelligence-assist/claude-hub/actions/workflows/security.yml)
-[![Jest Tests](https://img.shields.io/badge/tests-jest-green)](test/README.md)
+[![Jest Tests](https://img.shields.io/badge/tests-jest-green)](https://github.com/claude-did-this/claude-hub/tree/main/test)
 [![codecov](https://codecov.io/gh/intelligence-assist/claude-hub/branch/main/graph/badge.svg)](https://codecov.io/gh/intelligence-assist/claude-hub)
 [![Version](https://img.shields.io/github/v/release/intelligence-assist/claude-hub?label=version)](https://github.com/intelligence-assist/claude-hub/releases)
 [![Docker Hub](https://img.shields.io/docker/v/intelligenceassist/claude-hub?label=docker)](https://hub.docker.com/r/intelligenceassist/claude-hub)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](package.json)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://github.com/claude-did-this/claude-hub/blob/main/package.json)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/claude-did-this/claude-hub/blob/main/LICENSE)
 
 ![Claude GitHub Webhook brain factory - AI brain connected to GitHub octocat via assembly line of Docker containers](./assets/brain_factory.png)
 
@@ -172,7 +172,7 @@ cp -r ${CLAUDE_HUB_DIR:-~/.claude-hub}/* ~/.claude/
 ```
 
 **Prerequisites**: Claude Max subscription (5x or 20x plans). Claude Pro does not include Claude Code access.  
-**Details**: [Setup Container Guide](../setup-container-guide.md)
+**Details**: [Setup Container Guide](getting-started/setup-container-guide.md)
 
 ### Direct API Key (Production/Team)
 ```bash
@@ -180,7 +180,7 @@ ANTHROPIC_API_KEY=sk-ant-your-api-key-here
 ```
 
 **Best for**: Production environments, team usage, guaranteed stability.  
-**Details**: [Authentication Guide](../claude-authentication-guide.md)
+**Details**: [Authentication Guide](configuration/authentication.md)
 
 ### AWS Bedrock (Enterprise)
 ```bash
@@ -190,7 +190,7 @@ CLAUDE_CODE_USE_BEDROCK=1
 ```
 
 **Best for**: Enterprise deployments, AWS integration, compliance requirements.  
-**Details**: [Authentication Guide](../claude-authentication-guide.md)
+**Details**: [Authentication Guide](configuration/authentication.md)
 
 ### 2. GitHub Webhook Setup
 
@@ -342,16 +342,16 @@ DEBUG=claude:* npm run dev
 ## Documentation
 
 ### Deep Dive Guides
-- [Setup Container Authentication](../setup-container-guide.md) - Technical details for subscription-based auth
-- [Authentication Guide](../claude-authentication-guide.md) - All authentication methods and troubleshooting
-- [Complete Workflow](../complete-workflow.md) - End-to-end technical guide
-- [Container Setup](../container-setup.md) - Docker configuration details
-- [AWS Best Practices](../aws-authentication-best-practices.md) - IAM and credential management
-- [GitHub Integration](../github-workflow.md) - Webhook events and permissions
+- [Setup Container Authentication](getting-started/setup-container-guide.md) - Technical details for subscription-based auth
+- [Authentication Guide](configuration/authentication.md) - All authentication methods and troubleshooting
+- [Complete Workflow](getting-started/complete-workflow.md) - End-to-end technical guide
+- [Container Setup](getting-started/container-setup.md) - Docker configuration details
+- [AWS Best Practices](configuration/aws-authentication.md) - IAM and credential management
+- [GitHub Integration](features/github-integration.md) - Webhook events and permissions
 
 ### Reference
-- [Scripts Documentation](../SCRIPTS.md) - Utility scripts and commands
-- [Command Reference](./CLAUDE.md) - Build and run commands
+- [Scripts Documentation](configuration/scripts-reference.md) - Utility scripts and commands
+- [Command Reference](https://github.com/claude-did-this/claude-hub/blob/main/CLAUDE.md) - Build and run commands
 
 ## Contributing
 
@@ -405,8 +405,8 @@ npm run dev
 ### Support
 
 - Report issues: [GitHub Issues](https://github.com/intelligence-assist/claude-hub/issues)
-- Detailed troubleshooting: [Complete Workflow Guide](../complete-workflow.md#troubleshooting)
+- Detailed troubleshooting: [Complete Workflow Guide](getting-started/complete-workflow.md#troubleshooting)
 
 ## License
 
-MIT - See the [LICENSE file](LICENSE) for details.
+MIT - See the [LICENSE file](https://github.com/claude-did-this/claude-hub/blob/main/LICENSE) for details.

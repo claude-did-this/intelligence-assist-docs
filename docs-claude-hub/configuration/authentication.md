@@ -226,7 +226,7 @@ AWS_PROFILE=production-claude
 - [Anthropic Console](https://console.anthropic.com/) - API key management
 - [AWS Bedrock Documentation](https://docs.aws.amazon.com/bedrock/) - Enterprise setup
 - [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code) - Official Claude CLI docs
-- [Setup Container Deep Dive](./setup-container-guide.md) - Detailed setup container documentation
+- [Setup Container Deep Dive](../getting-started/setup-container-guide.md) - Detailed setup container documentation
 
 ---
 
