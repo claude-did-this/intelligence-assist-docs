@@ -3,12 +3,12 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Intelligence Assist Documentation',
-  tagline: 'AI-powered tools and services for intelligent automation',
+  title: 'Claude Did This',
+  tagline: 'Autonomous AI development - because sometimes Claude just does things',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://docs.intelligence-assist.com',
+  url: 'https://claude-did-this.com',
   // Set the /<baseUrl>/ pathname under which your site is served
   baseUrl: '/',
 

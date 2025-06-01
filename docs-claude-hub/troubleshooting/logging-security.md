@@ -281,6 +281,6 @@ The logger automatically redacts these environment variables when they appear in
 
 ## Related Documentation
 
-- [AWS Authentication Best Practices](./aws-authentication-best-practices.md)
+- [AWS Authentication Best Practices](../configuration/aws-authentication.md)
 - [Credential Security](./credential-security.md)
-- [Container Security](./container-limitations.md)
+- [Container Security](../configuration/container-limitations.md)

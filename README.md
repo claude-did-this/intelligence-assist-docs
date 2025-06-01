@@ -1,10 +1,10 @@
-# Intelligence Assist Documentation
+# Claude Did This Documentation
 
-This repository contains the official documentation site for Intelligence Assist, built with [Docusaurus](https://docusaurus.io/).
+This repository contains the official documentation site for Claude Did This, built with [Docusaurus](https://docusaurus.io/).
 
 ## 🌐 Live Site
 
-Visit the documentation at: [docs.intelligence-assist.com](https://docs.intelligence-assist.com)
+Visit the documentation at: [claude-did-this.com](https://claude-did-this.com)
 
 ## 🚀 Quick Start
 

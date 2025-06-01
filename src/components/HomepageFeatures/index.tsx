@@ -11,32 +11,32 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: 'Claude Hub',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Deploy Claude Code as a fully autonomous GitHub bot. Create your own bot account, 
+        mention it in any issue or PR, and watch AI-powered development happen end-to-end.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Autonomous Development',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Claude autonomously handles complete development workflows - from feature implementation 
+        to code review, PR management, CI/CD monitoring, and automated deployment.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Enterprise Ready',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Production-ready microservice with container isolation, webhook signature verification,
+        AWS IAM authentication, and comprehensive security features.
       </>
     ),
   },

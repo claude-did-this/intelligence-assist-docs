@@ -1,6 +1,6 @@
 # Projects Overview
 
-Intelligence Assist maintains several AI-powered projects designed to enhance developer productivity and automate software development workflows.
+Claude Did This maintains several AI-powered projects designed to enhance developer productivity and automate software development workflows.
 
 ## Current Projects
 
