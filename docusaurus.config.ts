@@ -13,7 +13,7 @@ const config: Config = {
   baseUrl: '/',
 
   // GitHub pages deployment config
-  organizationName: 'intelligence-assist',
+  organizationName: 'claude-did-this',
   projectName: 'intelligence-assist-docs',
   trailingSlash: false,
 

@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-# Welcome to Intelligence Assist
+# Welcome to Claude Did This
 
-Intelligence Assist is an organization focused on building AI-powered tools and services for intelligent automation, particularly in software development workflows.
+Claude Did This is an organization focused on building AI-powered tools and services for intelligent automation, particularly in software development workflows.
 
 ## Our Mission
 
@@ -45,9 +45,9 @@ Learn about all our projects and choose what fits your needs:
 
 ## Community & Support
 
-- **💬 Discussions** - [GitHub Discussions](https://github.com/orgs/intelligence-assist/discussions)
-- **🐛 Issues** - [Report Bugs](https://github.com/intelligence-assist/intelligence-assist-docs/issues)
-- **🆘 Support** - [Submit an Issue](https://github.com/intelligence-assist/intelligence-assist-docs/issues/new)
+- **💬 Discussions** - [GitHub Discussions](https://github.com/orgs/claude-did-this/discussions)
+- **🐛 Issues** - [Report Bugs](https://github.com/claude-did-this/intelligence-assist-docs/issues)
+- **🆘 Support** - [Submit an Issue](https://github.com/claude-did-this/intelligence-assist-docs/issues/new)
 - **📖 Documentation** - You're here! Explore more in the sidebar
 
 ## What's Next?
@@ -60,4 +60,4 @@ Ready to get started? Here are some recommended next steps:
 
 ---
 
-*Intelligence Assist - Empowering developers with intelligent automation.*
+*Claude Did This - Empowering developers with intelligent automation.*

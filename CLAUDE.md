@@ -26,7 +26,7 @@ This is a Docusaurus documentation site that serves as the central hub for Intel
 
 ### Automated Claude Hub Documentation
 
-The `docs-claude-hub/` directory contains documentation automatically synchronized from the [claude-hub repository](https://github.com/intelligence-assist/claude-hub). 
+The `docs-claude-hub/` directory contains documentation automatically synchronized from the [claude-hub repository](https://github.com/claude-did-this/claude-hub). 
 
 **⚠️ IMPORTANT**: Do NOT manually edit files in `docs-claude-hub/` as they will be overwritten during the next sync.
 

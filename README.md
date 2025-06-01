@@ -17,7 +17,7 @@ Visit the documentation at: [claude-did-this.com](https://claude-did-this.com)
 
 ```bash
 # Clone the repository
-git clone https://github.com/intelligence-assist/intelligence-assist-docs.git
+git clone https://github.com/claude-did-this/intelligence-assist-docs.git
 cd intelligence-assist-docs
 
 # Install dependencies
@@ -178,9 +178,9 @@ This documentation is licensed under the MIT License. See [LICENSE](LICENSE) for
 
 ## 🆘 Support
 
-- 📖 [Documentation Issues](https://github.com/intelligence-assist/intelligence-assist-docs/issues)
-- 💬 [Discussions](https://github.com/orgs/intelligence-assist/discussions)
-- 🐛 [Submit an Issue](https://github.com/intelligence-assist/intelligence-assist-docs/issues/new)
+- 📖 [Documentation Issues](https://github.com/claude-did-this/intelligence-assist-docs/issues)
+- 💬 [Discussions](https://github.com/orgs/claude-did-this/discussions)
+- 🐛 [Submit an Issue](https://github.com/claude-did-this/intelligence-assist-docs/issues/new)
 
 ---
 

@@ -1,6 +1,6 @@
 # Claude Hub Project
 
-Claude Hub is Intelligence Assist's flagship project - a sophisticated GitHub webhook service that brings Claude AI directly into your development workflow.
+Claude Hub is Claude Did This's flagship project - a sophisticated GitHub webhook service that brings Claude AI directly into your development workflow.
 
 ## What is Claude Hub?
 
@@ -55,9 +55,9 @@ Ready to integrate Claude Hub with your repository?
 ## Support & Community
 
 - 📖 [Full Documentation](../../claude-hub/overview)
-- 🐛 [Report Issues](https://github.com/intelligence-assist/claude-hub/issues)
-- 💬 [GitHub Discussions](https://github.com/intelligence-assist/claude-hub/discussions)
-- 🆘 [Submit an Issue](https://github.com/intelligence-assist/claude-hub/issues/new)
+- 🐛 [Report Issues](https://github.com/claude-did-this/claude-hub/issues)
+- 💬 [GitHub Discussions](https://github.com/claude-did-this/claude-hub/discussions)
+- 🆘 [Submit an Issue](https://github.com/claude-did-this/claude-hub/issues/new)
 
 ## Open Source
 

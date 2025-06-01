@@ -6,7 +6,7 @@ Claude Did This maintains several AI-powered projects designed to enhance develo
 
 ### Claude Hub 🤖
 **Status**: Active Development  
-**Repository**: [intelligence-assist/claude-hub](https://github.com/intelligence-assist/claude-hub)
+**Repository**: [claude-did-this/claude-hub](https://github.com/claude-did-this/claude-hub)
 
 A comprehensive GitHub webhook service that integrates Claude AI with your repositories for:
 
